@@ -1,9 +1,10 @@
-
 #
 # SoftwareOne-Report.ps1
 #
+
 # Created by:   Marco Musolesi
 # Created on:   2023-10-09
+
 # Version:      1.0
 
 # Description:  This script is used to manage report on oneclub api
@@ -15,9 +16,30 @@
 # Swagger:      https://app.swaggerhub.com/apis/OneClub/CHAAS/1.0
 
 $oneclubapi_url = "https://oneclubapi.softwareone.com"
-$username = "xxxxxx"
-$password = "xxxxxx"
-$apikey = "aaaaaaaaaaaaaaaa"
+
+$inisettings = Get-Content -Path ".\SoftwareOne.ini"
+
+# ask for a custom ini file
+
+$ini = Read-Host -Prompt "Do you want to use a custom ini file? (Y/N)"
+if ($ini -eq "Y") {
+    $inifile = Read-Host -Prompt "Please enter the path of the ini file"
+    $inisettings = Get-Content -Path $inifile
+}
+
+#load setting from ini
+
+foreach ($line in $inisettings) {
+    if ($line -like "username=*") {
+        $username = $line.Substring(9)
+    }
+    if ($line -like "password=*") {
+        $password = $line.Substring(9)
+    }
+    if ($line -like "apikey=*") {
+        $apikey = $line.Substring(7)
+    }
+}
 
 $ExportPath = "C:\Temp\SoftwareOne"
 $timestamp = Get-Date -Format "yyyy-MM-dd_HH-mm-ss"
